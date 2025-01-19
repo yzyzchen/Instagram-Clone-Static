@@ -1,0 +1,18 @@
+#!/bin/bash
+#
+# insta485test
+#
+# test
+#
+# Yuzhou Chen <yzc@umich.edu>
+
+set -Eeuo pipefail
+set -x
+pytest tests/
+pycodestyle insta485generator
+pydocstyle insta485generator
+pylint insta485generator
+rm -rf insta485/html
+insta485generator insta485
+html5validator (html5validator --ignore JAVA_TOOL_OPTIONS --root html)
+html5validator (html5validator --ignore JAVA_TOOL_OPTIONS --root insta485/html)
