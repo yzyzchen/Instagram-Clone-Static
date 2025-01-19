@@ -1,10 +1,11 @@
 """Build static HTML site from directory of HTML templates and plain files."""
-import click
+import sys
 import json
 import pathlib
+import shutil
+
+import click
 import jinja2
-import sys
-from distutils.dir_util import copy_tree
 
 
 @click.command()
@@ -16,9 +17,10 @@ def main(input_dir, output, verbose):
     input_path = pathlib.Path(input_dir)
 
     # check if output avaliable
-    output_root = (input_path/"html" 
-    if output is None 
-    else pathlib.Path(output)
+    output_root = (
+        input_path/"html"
+        if output is None
+        else pathlib.Path(output)
     )
     try:
         # Check if the output directory exists
@@ -43,9 +45,9 @@ def main(input_dir, output, verbose):
                 raise json.JSONDecodeError(
                     (
                         f"'{config_path}'\n"
-                        f"{e.msg}(line{e.lineno}column{e.colno})"
+                        f"{e.msg} (line {e.lineno} column {e.colno})"
                     ),
-                    e.doc, 
+                    e.doc,
                     e.pos
                 )
             # config_filename is automatically closed
@@ -59,20 +61,26 @@ def main(input_dir, output, verbose):
             static_path = input_path / "static"
             if static_path.exists():
                 try:
-                    copy_tree(str(static_path), str(output_root))
+                    shutil.copytree(str(
+                        static_path),
+                        str(output_root),
+                        dirs_exist_ok=True
+                    )
                     if verbose:
                         click.echo(f"Copied {static_path} -> {output_root}")
-                except Exception as e:
+                except OSError as e:
                     click.echo(f"Error copying static files: {e}")
                     sys.exit(1)
-        # Render templates and save output   
+        # Render templates and save output
         for key in data:
             url = key["url"].lstrip("/")
             # this will load as a template object
             try:
                 template = env.get_template(key["template"].lstrip("/"))
             except jinja2.exceptions.TemplateNotFound as e:
-                raise FileNotFoundError(f"'{key['template']}' not found.")
+                raise FileNotFoundError(
+                    f"'{key['template']}' not found."
+                ) from e
             except jinja2.exceptions.TemplateSyntaxError as e:
                 raise jinja2.exceptions.TemplateSyntaxError(
                     f"'{key['template']}'\n{e.message}", e.filename, e.lineno
@@ -107,8 +115,8 @@ def main(input_dir, output, verbose):
     except jinja2.exceptions.TemplateError as e:
         click.echo(f"insta485generator error: {e}", err=True)
         sys.exit(1)
-    except Exception as e:
-        click.echo(f"insta485generator error: Unexpected error: {e}", err=True)
+    except OSError as e:
+        click.echo(f"insta485generator error: {e}", err=True)
         sys.exit(1)
 
 
