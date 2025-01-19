@@ -14,5 +14,5 @@ pydocstyle insta485generator
 pylint insta485generator
 rm -rf insta485/html
 insta485generator insta485
-html5validator (html5validator --ignore JAVA_TOOL_OPTIONS --root html)
-html5validator (html5validator --ignore JAVA_TOOL_OPTIONS --root insta485/html)
+html5validator --ignore JAVA_TOOL_OPTIONS --root html
+html5validator --ignore JAVA_TOOL_OPTIONS --root insta485/html

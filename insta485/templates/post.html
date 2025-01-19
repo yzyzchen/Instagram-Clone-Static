@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ owner }}'s Post</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px;">
+            <a href="/" style="font-weight: bold; text-decoration: none;">
+                <img src="/static/logo.png" alt="Insta485 Logo" style="height: 30px; margin-right: 10px;">
+                Insta485
+            </a>
+            <div>
+                <a href="/explore/" style="text-decoration: none; font-weight: bold;">explore</a> |
+                <a href="/users/{{ logname }}/" style="text-decoration: none; font-weight: bold;">{{ logname }}</a>
+            </div>
+        </div>
+    </header>
+    <hr>
+
+    <!-- Main Content -->
+    <main style="max-width: 900px; margin: auto; padding: 20px; display: flex; gap: 20px;">
+        <!-- Post Image -->
+        <div style="flex: 2;">
+            <img src="{{ img_url }}" alt="Post by {{ owner }}" style="width: 100%; height: auto; border-radius: 8px; border: 1px solid #ddd;">
+        </div>
+
+        <!-- Post Details -->
+        <div style="flex: 1; display: flex; flex-direction: column; gap: 10px; padding: 10px; border: 1px solid #ddd; border-radius: 8px; background-color: #fff;">
+            <!-- Post Owner -->
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <img src="{{ owner_img_url }}" alt="{{ owner }}'s Profile Picture" style="width: 40px; height: 40px; border-radius: 50%;">
+                <div>
+                    <a href="/users/{{ owner }}/" style="text-decoration: none; font-weight: bold; color: #333;">{{ owner }}</a>
+                    <span style="display: block; font-size: 12px; color: #999;">{{ timestamp }}</span>
+                </div>
+            </div>
+
+            <!-- Likes -->
+            <p style="margin: 0; font-weight: bold;">
+                {% if likes > 0 %}
+                    {{ likes }} like{% if likes > 1 %}s{% endif %}
+                {% else %}
+                    No likes yet
+                {% endif %}
+            </p>
+
+            <!-- Comments -->
+            <div style="margin-top: 10px;">
+                {% if comments %}
+                    {% for comment in comments %}
+                        <p style="margin: 0; line-height: 1.5;">
+                            <a href="/users/{{ comment.owner }}/" style="text-decoration: none; font-weight: bold; color: #333;">{{ comment.owner }}</a>
+                            {{ comment.text }}
+                        </p>
+                    {% endfor %}
+                {% else %}
+                    <p>No comments yet</p>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer style="text-align: center; margin-top: 40px;">
+        <p>&copy; 2025 Insta485</p>
+    </footer>
+</body>
+</html>

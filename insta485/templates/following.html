@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Following</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px;">
+            <a href="/" style="font-weight: bold; text-decoration: none;">
+                Insta485
+            </a>
+            <div>
+                <a href="/explore/" style="text-decoration: none; font-weight: bold;">explore</a> |
+                <a href="/users/{{ logname }}/" style="text-decoration: none; font-weight: bold;">{{ logname }}</a>
+            </div>
+        </div>
+    </header>
+    <hr>
+
+    <!-- Main Content -->
+    <main style="max-width: 800px; margin: auto; padding: 20px;">
+        <h1 style="font-weight: bold;">Following</h1>
+        <ul style="list-style: none; padding: 0; margin: 20px 0;">
+            {% for user in following %}
+                <li style="display: flex; align-items: center; justify-content: space-between; padding: 10px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 10px; background-color: #fff;">
+                    <!-- User Icon and Username -->
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <img src="{{ user.user_img_url }}" alt="User Icon" style="width: 50px; height: 50px; border-radius: 50%;">
+                        <a href="/users/{{ user.username }}/" style="text-decoration: none; font-weight: bold; color: #333;">
+                            {{ user.username }}
+                        </a>
+                    </div>
+                    <!-- Relationship Status -->
+                    <div>
+                        {% if user.username == logname %}
+                            <!-- Blank if logged in user == user -->
+                        {% elif user.logname_follows_username %}
+                            <span style="color: gray; font-weight: normal;">following</span>
+                        {% else %}
+                            <span style="color: gray; font-weight: normal;">not following</span>
+                        {% endif %}
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </main>
+
+    <!-- Footer -->
+    <footer style="text-align: center; margin-top: 40px;">
+        <p>&copy; 2025 Insta485</p>
+    </footer>
+</body>
+</html>

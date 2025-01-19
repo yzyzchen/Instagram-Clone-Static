@@ -1,41 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>insta485</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>insta485</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-  <!-- Header Section -->
+  <!-- Header -->
   <header>
-    <a href="/" style="text-decoration: none; font-size: 24px;">Insta485</a>
-    <nav style="float: right;">
-      <a href="/explore/">explore</a> |
-      <a href="/users/awdeorio/">awdeorio</a>
-    </nav>
+    <div class="topbar" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px;">
+      <!-- Left-aligned logo -->
+      <div class="header-left" style="display: flex; align-items: center;">
+        <a href="/" style="font-weight: bold; text-decoration: none;">
+          Insta485
+        </a>
+      </div>
+      <!-- Right-aligned links -->
+      <div class="header-right" style="text-align: right;">
+        <a href="/explore/" style="text-decoration: none; font-weight: bold;">explore</a> |
+        <a href="/users/{{ logname }}/" style="text-decoration: none; font-weight: bold;">{{ logname }}</a>
+      </div>
+    </div>
   </header>
   <hr>
 
-  <!-- User Information Section -->
-  <section>
-    <h1>awdeorio</h1>
-    <p>
-      2 posts 
-      <a href="/users/awdeorio/followers/" style="text-decoration: none; font-weight: bold;">2 followers</a> 
-      <a href="/users/awdeorio/following/" style="text-decoration: none; font-weight: bold;">2 following</a>
-    </p>
-    <p>Andrew DeOrio</p>
-  </section>
-  <hr>
+  <!-- Main Content -->
+  <main style="max-width: 900px; margin: auto; padding: 20px;">
+    <!-- User Info Section -->
+    <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 20px;">
+      <h1 style="margin: 0; font-size: 24px;">{{ username }}</h1>
+      {% if logname == username %}
+       <br>
+      {% elif logname_follows_username %}
+        <p style="margin: 0; color: green;">following</p>
+      {% elif logname_follows_username is not true %}
+        <p style="margin: 0; color: red;">not following</p>
+      {% endif %}
+    </div>
 
-  <!-- Post Images Section -->
-  <section style="display: flex; gap: 10px;">
-    <a href="/posts/1/">
-      <img src="/uploads/122a7d27ca1d7420a1072f695d9290fad4501a41.jpg" alt="Chickens walking the plank" style="width: 200px; height: auto;">
-    </a>
-    <a href="/posts/3/">
-      <img src="/uploads/9887e06812ef434d291e4936417d125cd594b38a.jpg" alt="Chicks in a coop" style="width: 200px; height: auto;">
-    </a>
-  </section>
+    <!-- Posts, Followers, Following -->
+    <div style="display: flex; gap: 20px; margin-bottom: 20px;">
+      <p><a href="/users/{{ username }}/posts/" style="text-decoration: none;">{{ total_posts }} post{% if total_posts > 1 %}s{% endif %}</a></p>
+      <p><a href="/users/{{ username }}/followers/" style="text-decoration: none;">{{ followers }} follower{% if followers > 1 %}s{% endif %}</a></p>
+      <p><a href="/users/{{ username }}/following/" style="text-decoration: none;">{{ following }} following</a></p>
+    </div>
+    <p style="font-weight: bold; margin: 0;">{{ fullname }}</p>
+
+    <hr>
+
+    <!-- Posts Section -->
+    <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-start;">
+      {% for post in posts %}
+        <a href="/posts/{{ post.postid }}/" style="text-decoration: none;">
+          <img src="{{ post.img_url }}" alt="Post Image" style="width: 300px; height: auto; object-fit: cover;">
+        </a>
+      {% endfor %}
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer style="text-align: center; margin-top: 40px;">
+    <p>&copy; 2025 insta485</p>
+  </footer>
 </body>
 </html>
